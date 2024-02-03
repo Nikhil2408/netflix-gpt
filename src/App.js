@@ -1,10 +1,14 @@
 import './App.css';
+import Body from './components/Body';
+import { Provider } from 'react-redux';
+import store from './redux/store';
 
 function App() {
   return (
-    <div>
-        <h2 className='text-3xl font-bold text-emerald-800'>This is netflix gpt</h2>
-    </div>
+    <Provider store={store}>
+        <Body />     
+    </Provider>
+    
   );
 }
 
