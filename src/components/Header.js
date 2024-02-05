@@ -1,31 +1,55 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import netflixLogo from "../assets/Netflix_Logo.png";
 import { auth } from '../utils/firebase';
-import { signOut } from 'firebase/auth';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { userActions } from '../redux/userSlice';
+import { AVATAR_IMG } from '../utils/constants';
 
 const Header = (props) => {
     const navigate = useNavigate();
     const {page} = props;
-    const displayName = useSelector(state => state.userReducer.displayName)
+    const displayName = useSelector(state => state?.userReducer?.displayName)
+    const dispatch = useDispatch();
 
     function handleSignOut(){
         signOut(auth).then(() => {
-            navigate("/");
         }).catch((error) => {
-            // An error happened.
+            navigate("/errors");
         });
     }
+
+    useEffect(() => {
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+              const {uid, email, displayName} = user;
+              dispatch(userActions.setUser({uid, email, displayName}))
+              navigate("/browse")
+            } else {
+              dispatch(userActions.removeUser());
+              navigate("/")
+            }
+        });
+    }, [])
+
+    let parentCSS;
+
+    if(page === "Browse"){
+        parentCSS = "absolute px-8 py-4 w-screen flex flex-row justify-between items-center z-20 bg-gradient-to-b from-black"
+    } else{
+        parentCSS = "absolute px-8 py-4 bg-gradient-to-b from-black flex flex-row justify-between items-center"
+    }
+
   return (
-    <div className="absolute px-8 py-4 bg-gradient-to-b from-black w-screen flex flex-row justify-between items-center">
+    <div className={parentCSS}>
         <img className='w-40' src={netflixLogo} alt='Netflix Logo'/>
         {
             page === "Browse"
             &&
             <div className='flex flex-row mr-2 items-center'>
                 <p className='mr-2 text-lg'>Welcome {displayName}!</p>
-                <img className = "w-10 h-10 mr-2" src="https://occ-0-2483-3647.1.nflxso.net/dnm/api/v6/vN7bi_My87NPKvsBoib006Llxzg/AAAABUMx6z-7bB7tyN-OZXt6i8BXuZHN5EWBr7MQy7ilhubrpI2yOofVtT-QmoO6VJt7I1ewosmuQa29BGFfOOVcJxdKx1sT-co.png?r=201" alt="Profile Logo" />
+                <img className = "w-10 h-10 mr-2" src={AVATAR_IMG} alt="Profile Logo" />
                 <button className='text-white font-bold' onClick={handleSignOut}>Sign Out</button>
             </div>
         }
