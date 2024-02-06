@@ -24,7 +24,7 @@ const Browse = () => {
     }, [])
 
   return (
-    <div className='flex flex-row'>
+    <div className='flex flex-col'>
         <Header page = "Browse" />
         <MainContainer />
         <SecondaryContainer />

@@ -5,7 +5,6 @@ const VideoBackground = (props) => {
     const [trailorKey, setTrailorKey] = useState();
     const {movie} = props;
 
-    console.log(movie)
     useEffect(() => {
         if(movie){
             fetch(`https://api.themoviedb.org/3/movie/${movie.id}/videos`, API_OPTIONS)
