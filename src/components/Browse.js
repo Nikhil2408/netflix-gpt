@@ -5,23 +5,17 @@ import MainContainer from './MainContainer'
 import SecondaryContainer from './SecondaryContainer'
 import { useDispatch } from 'react-redux'
 import { moviesActions } from '../redux/moviesSlice'
+import useNowPlayingMovies from '../hooks/useNowPlayingMovies'
+import usePopularMovies from '../hooks/usePopularMovies'
+import useTopRatedMovies from '../hooks/useTopRatedMovies'
+import useUpcomingMovies from '../hooks/useUpcomingMovies'
 
 const Browse = () => {
 
-    const dispatch = useDispatch();
-
-    useEffect(() => {
-        fetch("https://api.themoviedb.org/3/movie/now_playing?page=1", API_OPTIONS)
-        .then((responseObj) => {
-            return responseObj.json()
-        })
-        .then((response) => {
-            dispatch(moviesActions.addNowPlayingMovies(response.results));
-        })
-        .catch((err) => {
-
-        })
-    }, [])
+    useNowPlayingMovies();
+    usePopularMovies();
+    useTopRatedMovies();
+    useUpcomingMovies();
 
   return (
     <div className='flex flex-col'>
