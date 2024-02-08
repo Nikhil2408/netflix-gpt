@@ -11,3 +11,5 @@ export const API_OPTIONS =  {
 
 
 export const IMG_CDN = "https://image.tmdb.org/t/p/w300/"
+
+export const languages = [{langCode: "en", languageName: "English"}, {langCode: "hindi", languageName: "hindi"}, {langCode: "spanish", languageName: "Spanish"}]
